@@ -1,0 +1,45 @@
+# kubernetes/backend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docx-pdf-backend
+  labels:
+    app: docx-pdf-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: docx-pdf-backend
+  template:
+    metadata:
+      labels:
+        app: docx-pdf-backend
+    spec:
+      containers:
+      - name: backend
+        image: docx-pdf-backend:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: MONGODB_URI
+        - name: PORT
+          value: "5000"
+        - name: NODE_ENV
+          value: production
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        volumeMounts:
+        - name: uploads
+          mountPath: /usr/src/app/uploads
+      volumes:
+      - name: uploads
+        emptyDir: {}

@@ -1,0 +1,13 @@
+# kubernetes/backend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: docx-pdf-backend-service
+spec:
+  selector:
+    app: docx-pdf-backend
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: ClusterIP
